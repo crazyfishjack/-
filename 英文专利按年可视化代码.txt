@@ -1,0 +1,110 @@
+from pylab import *
+font = {'family': 'Microsoft YaHei',  'weight': 'bold',  'size': '14'}
+matplotlib.rc("font", family="Microsoft YaHei", weight="bold", size="7")
+name="多模态感知与识别-result"
+i1=0
+i2=0
+i3=0
+x={}
+xx=[]
+xy=[]
+for line in open("E:\\实验室项目二\\英文专利-OK\\英文专利-OK\\"+name+".txt","r",encoding='utf-8'):
+    if line[0]=='=':
+        try:
+            f = open("E:\\实验室项目二\\英文专利-OK\\"+name+"\\"+file_name, 'w', encoding="utf-8")
+        except FileNotFoundError:
+            f = open("E:\\实验室项目二\\英文专利-OK\\"+name+"\\filenotfounderror title"+str(i1), 'w', encoding="utf-8")
+            i1=i1+1
+        except OSError:
+            f = open("E:\\实验室项目二\\英文专利-OK\\"+name+"\\oserror title"+str(i2), 'w', encoding="utf-8")
+            i2=12+1
+        msg = """
+        <!DOCTYPE HTML>
+        <html>
+        <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>%s</title>
+        <link rel="stylesheet" href="table.css" type="text/css" >
+        </head>
+        
+        <body>
+        
+        <table border="0" cellspacing="0" cellpadding="3" summary="file table" class="fancy centered">
+        <tr><th><b>名称</b></th><th><b>内容</b></th></tr>
+        <tr><td style="text-align: left"> application_no  </td>  <td style="text-align: left" align="left">  %s</td></tr>
+        <tr class="row2"><td style="text-align: left">  publication_no </td>   <td style="text-align: left" align="left"> %s </td></tr>
+        <tr><td style="text-align: left"> date  </td> <td style="text-align: left" align="left"> %s </td></tr>
+        <tr class="row2"><td style="text-align: left"> application_date  </td>  <td style="text-align: left" align="left">%s  </td></tr>
+        <tr><td style="text-align: left"> title  </td><td style="text-align: left" align="left">  %s</td></tr>
+        <tr class="row2"><td style="text-align: left"> abstract </td><td style="text-align: left" align="left"> %s </td></tr>
+        <tr ><td style="text-align: left"> applicant  </td><td style="text-align: left" align="left"> %s </td></tr>
+        <tr class="row2"><td style="text-align: left"> inventor  </td><td style="text-align: left" align="left"> %s </td></tr>
+        </table>
+        
+        </body>
+        </html>""" % (s0,s1,s2,s3,s4,s0,s5,s6,s7)
+        f.write(msg)
+        f.close()
+    line=line.split("】",1)
+    try:
+        if line[0]=="【title":
+            line[1]=line[1].replace('\n','')
+            file_name = line[1]+str(i3)+".html"
+            i3=i3+1
+            file_name=file_name.replace('/',' ')
+            file_name=file_name.replace('\\',' ')
+            file_name=file_name.replace(':',' ')
+            file_name=file_name.replace('"',' ')
+            file_name=file_name.replace('<',' ')
+            file_name=file_name.replace('>',' ')
+            file_name=file_name.replace('|',' ')
+            file_name=file_name.replace('?',' ')
+            s0=line[1]
+        if line[0]=="【application_no":
+            line[1]=line[1].replace('\n','')
+            s1 = line[1]
+        if line[0]=="【publication_no":
+            line[1]=line[1].replace('\n','')
+            s2 = line[1]
+        if line[0]=="【date":
+            line[1]=line[1].replace('\n','')
+            s3 = line[1]
+        if line[0]=="【application_date":
+            line[1]=line[1].replace('\n','')
+            s4 = line[1]
+            data=line[1].split('.',1);
+            if x.get(data[0],0)==0:
+                x.update({data[0]:0})
+            x[data[0]]=x[data[0]]+1
+        if line[0]=="【abs":
+            line[1]=line[1].replace('\n','')
+            s5=line[1]
+        if line[0]=="【applicant":
+            line[1]=line[1].replace('\n','')
+            s6 = line[1]
+        if line[0]=="【inventor":
+            line[1]=line[1].replace('\n','')
+            s7 = line[1]
+    except IndexError:
+        print(error)
+        break;
+for k in x.keys():
+    xx.append(k)
+xx.sort()
+for i in xx:
+    for k in x.keys():
+        if i==k:
+            xy.append(x[k])
+plt.title("按年统计的专利数量")        
+plt.ylabel("数量")                         
+plt.bar(xx,xy,color='#87CEEB',edgecolor='#000000',linewidth=1) 
+for a,b in zip(xx,xy):
+	 plt.text(a,b,'%d'%b,ha='center',va='bottom')
+plt.show()
+ss=0
+for i in xy:
+    ss=ss+i
+print(ss)
+
+
+
